@@ -1,0 +1,450 @@
+:root {
+  --bg: #0a0a0a;
+  --panel-line: rgba(255, 255, 255, 0.9);
+  --orange: #ff5a1f;
+  --orange-dark: #e04e18;
+  --card-bg: #141414;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --box-bg: #101010;
+  --box-border: rgba(255, 255, 255, 0.14);
+  --text: #ffffff;
+  --muted: #9a9691;
+  --watermark: rgba(255, 255, 255, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  overflow: hidden;
+}
+
+.panel {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 540px;
+  width: 100%;
+}
+
+/* ---------- Divider rules ---------- */
+.rule {
+  width: 100%;
+  max-width: 220px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, var(--text) 45%, var(--orange) 100%);
+}
+
+/* ---------- Headline ---------- */
+.headline {
+  margin: 11px 0;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: clamp(23px, 4vw, 33px);
+  letter-spacing: -0.01em;
+}
+
+.headline-accent {
+  color: var(--orange);
+}
+
+/* ---------- Tagline ---------- */
+.tagline {
+  margin: 0 0 11px;
+  max-width: 430px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* ---------- Countdown ---------- */
+.countdown {
+  margin: 20px 0 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+}
+
+.cd-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
+.cd-num {
+  min-width: 43px;
+  padding: 7px 5px;
+  border: 1.5px solid var(--box-border);
+  border-radius: 8px;
+  background: var(--box-bg);
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: clamp(14px, 2.1vw, 19px);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.cd-label {
+  font-size: 9.5px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.cd-colon {
+  align-self: center;
+  margin-top: -12px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ---------- Waitlist card ---------- */
+.waitlist-card {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 17px clamp(17px, 4vw, 27px);
+}
+
+.waitlist-title {
+  margin: 0 0 5px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 15.5px;
+}
+
+.waitlist-subtext {
+  margin: 0 0 13px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.waitlist-subtext.error {
+  color: #ff6b5e;
+  font-weight: 600;
+}
+
+.waitlist-subtext.success {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+#emailInput {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border-radius: 9px;
+  border: 1px solid var(--card-border);
+  background: #0d0d0d;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+#emailInput::placeholder {
+  color: #6b6864;
+}
+
+#emailInput:focus {
+  border-color: var(--orange);
+}
+
+#subscribeBtn {
+  flex-shrink: 0;
+  padding: 10px 17px;
+  border-radius: 9px;
+  border: none;
+  background: var(--orange);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+#subscribeBtn:hover {
+  background: var(--orange-dark);
+}
+
+#subscribeBtn:active {
+  transform: scale(0.97);
+}
+
+#subscribeBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* ---------- Social icons ---------- */
+.social-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: #0d0d0d;
+  color: var(--muted);
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, background 0.2s ease;
+}
+
+.social-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.social-icon:hover {
+  color: var(--text);
+  border-color: var(--orange);
+  background: rgba(255, 90, 31, 0.1);
+  transform: translateY(-2px);
+}
+
+/* ---------- Watermark ---------- */
+.watermark {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  z-index: 1;
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-size: clamp(50px, 13vw, 160px);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+
+  /* base outline: brighter than before so the letterforms actually read */
+  color: transparent;
+  -webkit-text-stroke: 0.75px rgba(255, 255, 255, 0.16);
+
+  /* shine sweep, clipped to the same text */
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.55) 48%,
+    rgba(255, 255, 255, 0) 66%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: watermark-shine 5s ease-in-out infinite;
+}
+
+@keyframes watermark-shine {
+  0% { background-position: 160% 0; }
+  100% { background-position: -60% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watermark {
+    animation: none;
+    background: none;
+    opacity: 1;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.14);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+/* ---------- Load-in animation ---------- */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel > * {
+  opacity: 0;
+  animation: fadeSlideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.panel > .rule:nth-of-type(1) { animation-delay: 0.05s; }
+.panel > .headline { animation-delay: 0.15s; }
+.panel > .tagline { animation-delay: 0.25s; }
+.panel > .rule:nth-of-type(2) { animation-delay: 0.35s; }
+.panel > .countdown { animation-delay: 0.45s; }
+.panel > .waitlist-card { animation-delay: 0.55s; }
+
+@keyframes watermarkFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.watermark {
+  animation: watermark-shine 5s ease-in-out infinite, watermarkFadeIn 1.2s ease-out forwards;
+  animation-delay: 0s, 0.65s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel > *,
+  .watermark {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (min-width: 641px) and (max-width: 1100px) {
+  .panel {
+    max-width: 700px;
+  }
+
+  .headline {
+    font-size: clamp(34px, 5.8vw, 44px);
+  }
+
+  .tagline {
+    max-width: 540px;
+    font-size: 17px;
+  }
+
+  .countdown {
+    gap: 12px;
+    margin: 32px 0 36px;
+  }
+
+  .cd-num {
+    min-width: 64px;
+    padding: 13px 10px;
+    font-size: 27px;
+  }
+
+  .cd-label {
+    font-size: 13px;
+  }
+
+  .cd-colon {
+    font-size: 20px;
+    margin-top: -18px;
+  }
+
+  .waitlist-card {
+    padding: 28px 40px;
+  }
+
+  .waitlist-title {
+    font-size: 21px;
+  }
+
+  .waitlist-subtext {
+    font-size: 15px;
+  }
+
+  .input-row {
+    max-width: 440px;
+  }
+
+  #emailInput,
+  #subscribeBtn {
+    font-size: 16px;
+    padding: 14px 20px;
+  }
+
+  .social-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .social-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .watermark {
+    display: none;
+  }
+
+  .countdown {
+    gap: 6px;
+  }
+
+  .cd-num {
+    min-width: 42px;
+    padding: 9px 5px;
+    font-size: 15px;
+  }
+
+  .cd-colon {
+    margin-top: -14px;
+    font-size: 15px;
+  }
+
+  .input-row {
+    flex-direction: column;
+  }
+
+  #subscribeBtn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .cd-block:nth-child(1) .cd-label,
+  .countdown .cd-label {
+    font-size: 9.5px;
+  }
+
+  .cd-num {
+    min-width: 38px;
+    font-size: 14px;
+  }
+}
