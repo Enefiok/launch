@@ -148,7 +148,7 @@ form.addEventListener('submit', async (e) => {
     // 3. Handle the backend's response
     if (response.ok) {
       // Success! (201 Created)
-      setHint("🎉 You're on the list! Check your email for a welcome message.", 'success');
+      setHint("You're on the list! Check your email for a welcome message.", 'success');
       emailInput.value = ''; // Clear the input field
 
       //  TRIGGER CONFETTI CELEBRATION!
