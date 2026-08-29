@@ -178,7 +178,7 @@ emailInput.addEventListener('input', () => {
 });
 
 // ---------- WhatsApp chat widget ----------
-const WHATSAPP_NUMBER = '2347064820919'; // country code + number, no + or spaces
+const WHATSAPP_NUMBER = '2348088349833'; // country code + number, no + or spaces
 const WHATSAPP_DEFAULT_MESSAGE = "Hi PiHub! I'm interested in learning more.";
 
 const waFabBtn = document.getElementById('waFabBtn');
