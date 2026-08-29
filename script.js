@@ -148,7 +148,7 @@ form.addEventListener('submit', async (e) => {
     // 3. Handle the backend's response
     if (response.ok) {
       // Success! (201 Created)
-      setHint(" You're on the list! Check your email for a welcome message.", 'success');
+      setHint("🎉 You're on the list! Check your email for a welcome message.", 'success');
       emailInput.value = ''; // Clear the input field
 
       //  TRIGGER CONFETTI CELEBRATION!
@@ -174,5 +174,53 @@ form.addEventListener('submit', async (e) => {
 emailInput.addEventListener('input', () => {
   if (hint && hint.classList.contains('error')) {
     setHint(DEFAULT_HINT, null);
+  }
+});
+
+// ---------- WhatsApp chat widget ----------
+const WHATSAPP_NUMBER = '2347064820919'; // country code + number, no + or spaces
+const WHATSAPP_DEFAULT_MESSAGE = "Hi PiHub! I'm interested in learning more.";
+
+const waFabBtn = document.getElementById('waFabBtn');
+const waPopup = document.getElementById('waPopup');
+const waClose = document.getElementById('waClose');
+const waSendBtn = document.getElementById('waSendBtn');
+const waWidget = document.getElementById('waWidget');
+
+if (waSendBtn) {
+  waSendBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_DEFAULT_MESSAGE)}`;
+}
+
+function openWaPopup() {
+  if (!waPopup || !waFabBtn) return;
+  waPopup.hidden = false;
+  waFabBtn.setAttribute('aria-expanded', 'true');
+}
+
+function closeWaPopup() {
+  if (!waPopup || !waFabBtn) return;
+  waPopup.hidden = true;
+  waFabBtn.setAttribute('aria-expanded', 'false');
+}
+
+if (waFabBtn && waPopup) {
+  waFabBtn.addEventListener('click', () => {
+    if (waPopup.hidden) {
+      openWaPopup();
+    } else {
+      closeWaPopup();
+    }
+  });
+}
+
+if (waClose) {
+  waClose.addEventListener('click', closeWaPopup);
+}
+
+// Close popup when clicking outside of it
+document.addEventListener('click', (e) => {
+  if (!waWidget || !waPopup || waPopup.hidden) return;
+  if (!waWidget.contains(e.target)) {
+    closeWaPopup();
   }
 });
