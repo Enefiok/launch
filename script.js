@@ -56,22 +56,50 @@ function setHint(text, state) {
 }
 
 // ---------- Confetti Animation ----------
+// NOTE: canvas-confetti normally appends its own <canvas> as position:fixed
+// directly to <body>. In WebKit browsers (Safari, iOS), a position:fixed
+// descendant can still get clipped if any ancestor (here: body/.page) has
+// overflow:hidden — even though spec-wise it shouldn't. That silently
+// "hides" the confetti with no console error.
+//
+// Fix: create our own dedicated canvas, append it to <html> (outside the
+// overflow:hidden chain), and drive it with confetti.create() instead of
+// the global confetti() helper.
+let myConfetti = null;
+
+function getConfettiInstance() {
+  if (myConfetti) return myConfetti;
+
+  const confettiCanvas = document.createElement('canvas');
+  confettiCanvas.style.position = 'fixed';
+  confettiCanvas.style.top = '0';
+  confettiCanvas.style.left = '0';
+  confettiCanvas.style.width = '100%';
+  confettiCanvas.style.height = '100%';
+  confettiCanvas.style.pointerEvents = 'none';
+  confettiCanvas.style.zIndex = '9999';
+  document.documentElement.appendChild(confettiCanvas);
+
+  myConfetti = confetti.create(confettiCanvas, { resize: true, useWorker: true });
+  return myConfetti;
+}
+
 function triggerConfetti() {
-  // Create confetti using canvas-confetti CDN
+  const fire = getConfettiInstance();
   const duration = 3000;
   const end = Date.now() + duration;
 
   const colors = ['#ff6b35', '#f7931e', '#ffd700', '#ff4757', '#2ed573'];
 
   (function frame() {
-    confetti({
+    fire({
       particleCount: 3,
       angle: 60,
       spread: 55,
       origin: { x: 0 },
       colors: colors
     });
-    confetti({
+    fire({
       particleCount: 3,
       angle: 120,
       spread: 55,
@@ -102,7 +130,7 @@ form.addEventListener('submit', async (e) => {
   setHint('Processing your request...', null);
 
   try {
-    // IMPORTANT: This is your LIVE Render API URL. 
+    // IMPORTANT: This is your LIVE Render API URL.
     // (If testing locally, change this to: 'http://127.0.0.1:8000/api/core/subscribe/')
     const API_URL = 'https://pihub-backend.onrender.com/api/core/subscribe/';
 
@@ -120,12 +148,12 @@ form.addEventListener('submit', async (e) => {
     // 3. Handle the backend's response
     if (response.ok) {
       // Success! (201 Created)
-      setHint("🎉 You're on the list! Check your email for a welcome message.", 'success');
+      setHint(" You're on the list! Check your email for a welcome message.", 'success');
       emailInput.value = ''; // Clear the input field
-      
+
       //  TRIGGER CONFETTI CELEBRATION!
       triggerConfetti();
-      
+
     } else {
       // Backend returned an error (e.g., 400 Bad Request)
       // Django often returns errors like: {"email": ["Enter a valid email address."]}
