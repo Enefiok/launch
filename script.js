@@ -55,6 +55,36 @@ function setHint(text, state) {
   if (state) hint.classList.add(state);
 }
 
+// ---------- Confetti Animation ----------
+function triggerConfetti() {
+  // Create confetti using canvas-confetti CDN
+  const duration = 3000;
+  const end = Date.now() + duration;
+
+  const colors = ['#ff6b35', '#f7931e', '#ffd700', '#ff4757', '#2ed573'];
+
+  (function frame() {
+    confetti({
+      particleCount: 3,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors: colors
+    });
+    confetti({
+      particleCount: 3,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors: colors
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  }());
+}
+
 // --- REAL API INTEGRATION HERE ---
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -90,8 +120,12 @@ form.addEventListener('submit', async (e) => {
     // 3. Handle the backend's response
     if (response.ok) {
       // Success! (201 Created)
-      setHint("You're on the list! Check your email for a welcome message.", 'success');
+      setHint("🎉 You're on the list! Check your email for a welcome message.", 'success');
       emailInput.value = ''; // Clear the input field
+      
+      //  TRIGGER CONFETTI CELEBRATION!
+      triggerConfetti();
+      
     } else {
       // Backend returned an error (e.g., 400 Bad Request)
       // Django often returns errors like: {"email": ["Enter a valid email address."]}
@@ -113,4 +147,4 @@ emailInput.addEventListener('input', () => {
   if (hint && hint.classList.contains('error')) {
     setHint(DEFAULT_HINT, null);
   }
-}); 
+});
