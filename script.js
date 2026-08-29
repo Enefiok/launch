@@ -55,7 +55,8 @@ function setHint(text, state) {
   if (state) hint.classList.add(state);
 }
 
-form.addEventListener('submit', (e) => {
+// --- REAL API INTEGRATION HERE ---
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const value = emailInput.value.trim();
 
@@ -65,19 +66,51 @@ form.addEventListener('submit', (e) => {
     return;
   }
 
+  // 1. Show loading state
   btn.disabled = true;
   btn.textContent = 'Adding...';
+  setHint('Processing your request...', null);
 
-  setTimeout(() => {
-    setHint("You're on the list! We'll be in touch soon.", 'success');
-    emailInput.value = '';
+  try {
+    // IMPORTANT: This is your LIVE Render API URL. 
+    // (If testing locally, change this to: 'http://127.0.0.1:8000/api/core/subscribe/')
+    const API_URL = 'https://pihub-backend.onrender.com/api/core/subscribe/';
+
+    // 2. Send the real request to your Django backend
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: value }),
+    });
+
+    const data = await response.json();
+
+    // 3. Handle the backend's response
+    if (response.ok) {
+      // Success! (201 Created)
+      setHint("You're on the list! Check your email for a welcome message.", 'success');
+      emailInput.value = ''; // Clear the input field
+    } else {
+      // Backend returned an error (e.g., 400 Bad Request)
+      // Django often returns errors like: {"email": ["Enter a valid email address."]}
+      const errorMsg = data.email ? data.email[0] : (data.error || data.detail || 'Something went wrong. Please try again.');
+      setHint(errorMsg, 'error');
+    }
+  } catch (error) {
+    // Network error (e.g., backend is down, or CORS blocked it)
+    console.error('Subscription error:', error);
+    setHint('Network error. Please check your connection and try again.', 'error');
+  } finally {
+    // 4. Reset button state no matter what happens
     btn.disabled = false;
     btn.textContent = 'Join waitlist';
-  }, 600);
+  }
 });
 
 emailInput.addEventListener('input', () => {
   if (hint && hint.classList.contains('error')) {
     setHint(DEFAULT_HINT, null);
   }
-});
+}); 
