@@ -143,10 +143,18 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify({ email: value }),
     });
 
-    const data = await response.json();
+    // --- DEBUG: try to read the body, but don't let a parse failure
+    // masquerade as a generic "network error" ---
+    let data = null;
+    let parseError = null;
+    try {
+      data = await response.json();
+    } catch (err) {
+      parseError = err;
+    }
 
     // 3. Handle the backend's response
-    if (response.ok) {
+    if (response.ok && data) {
       // Success! (201 Created)
       setHint("You're on the list! Check your email for a welcome message.", 'success');
       emailInput.value = ''; // Clear the input field
@@ -154,16 +162,26 @@ form.addEventListener('submit', async (e) => {
       //  TRIGGER CONFETTI CELEBRATION!
       triggerConfetti();
 
+    } else if (parseError) {
+      // DEBUG: request reached the server (we got a response object) but
+      // the body wasn't valid JSON — e.g. Render returned an HTML error
+      // page (502/504), or a CORS proxy/interstitial page.
+      setHint(
+        `DEBUG: got status ${response.status} but body wasn't JSON (${parseError.message})`,
+        'error'
+      );
     } else {
       // Backend returned an error (e.g., 400 Bad Request)
       // Django often returns errors like: {"email": ["Enter a valid email address."]}
-      const errorMsg = data.email ? data.email[0] : (data.error || data.detail || 'Something went wrong. Please try again.');
-      setHint(errorMsg, 'error');
+      const errorMsg = data.email ? data.email[0] : (data.error || data.detail || `Something went wrong (status ${response.status}).`);
+      setHint(`DEBUG [${response.status}]: ${errorMsg}`, 'error');
     }
   } catch (error) {
-    // Network error (e.g., backend is down, or CORS blocked it)
+    // The fetch itself failed before we got any response at all —
+    // this is the real "network error" case: DNS failure, CORS block,
+    // mixed-content block, timeout, offline, etc.
     console.error('Subscription error:', error);
-    setHint('Network error. Please check your connection and try again.', 'error');
+    setHint(`DEBUG: ${error.name} - ${error.message}`, 'error');
   } finally {
     // 4. Reset button state no matter what happens
     btn.disabled = false;
